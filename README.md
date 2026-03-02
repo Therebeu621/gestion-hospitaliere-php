@@ -8,6 +8,10 @@ Application web universitaire de gestion hospitaliere avec authentification et m
 
 Le projet tourne sans framework PHP, avec SQLite en base locale et jQuery pour les appels AJAX.
 
+## Apercu
+
+![Page accueil](docs/images/page-accueil.png)
+
 ## Stack
 
 - PHP 8.x (vanilla)
@@ -144,4 +148,3 @@ Le job echoue si:
 - Projet vanilla (pas de framework, pas de tests unitaires natifs)
 - Certaines regles metier sont simplifiees pour le contexte universitaire
 - Validation front encore basee majoritairement sur highlighting de labels
-
