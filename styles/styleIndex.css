@@ -1,0 +1,139 @@
+body{
+    background: url("../img/bg2.jpg") ;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-color: #fffaec;
+}
+.deconnexion {
+    color: red;
+}
+
+.deconnexion:hover{
+    color:black;
+    text-decoration: underline mediumspringgreen;
+
+}
+
+.nbDatas {
+    color: green;
+}
+
+.nbDatas:hover{
+    color:darkgreen;
+    text-decoration: underline mediumspringgreen;
+}
+
+.navbar{
+    border-bottom: green 2px solid;
+}
+
+.buttonIndex{
+    margin-top: 10px;
+    margin-left: 75px;
+    background-color: rgba(102, 97, 76, 0.4);
+    border: 3px solid black;
+    border-top-right-radius: 20%;
+    border-bottom-left-radius: 20%;
+    display:inline-block;
+    display: block;
+    width : 1000px;
+    text-align: center;
+}
+
+.buttonIndex button{
+    color: black;
+    width: 600px;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    border: 1px solid white;
+}
+
+.buttonIndex button:hover{
+    border: 2px white dashed;
+    color: white;
+}
+
+.buttonIndex #beneficiaire{
+    margin-left: 5%;
+    background-color: #48999e;
+}
+
+.buttonIndex #prestation{
+    margin-left: 15%;
+    background-color: #f29499;
+}
+
+
+.buttonIndex #affection{
+    margin-left: 25%;
+    background-color: #849e9a;
+}
+
+.buttonIndex #deconnexion{
+    margin-left: 35%;
+    background-color: #a95456;
+    width: 600px;
+    margin-bottom: 2%;
+}
+
+h1{
+    margin-top: 200px;
+    margin-left: 15%;
+    margin-right: 50%;
+    border-top: 5px solid black;
+    border-top-right-radius: 100%;
+}
+
+.formulaire{
+    margin-top: 250px;
+    margin-left: 350px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 3px solid white;
+    border-top-right-radius: 20%;
+    border-bottom-left-radius: 20%;
+    display:inline-block;
+    display: block;
+    width : 300px;
+    text-align: center;
+}
+
+.formulaire input[type=submit]{
+    color:white;
+    background-color:#003104;
+    border: 2px solid white;
+}
+
+.formulaire label{
+    margin-left: 5%;
+    color: white;
+    display: block;
+    background-color: #003104;
+    width : 150px;
+    text-align: center;
+    transform: translateY(10px);
+    border-top: 2px white solid;
+    border-right: 2px white solid;
+    border-left: 2px white solid;
+    border-top-left-radius: 40%;
+}
+
+
+.formulaire input {
+    border: 2px solid #003104;
+    width : 150px;
+    -webkit-box-sizing: border-box; /* Pour les anciennes versions des navigateurs WebKit */
+    -moz-box-sizing: border-box; /* Pour tous les navigateurs Gecko */
+    box-sizing: border-box;
+}
+
+.formulaire h1{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+    color: white;
+    font-size: x-large;
+    border: none;
+}

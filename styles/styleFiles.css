@@ -1,0 +1,567 @@
+/* bg start */
+
+body{
+    background: url("../img/136920.webp") ;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-color: #B9B2FF;
+}
+
+body .navbar{
+    opacity: 0.8;
+}
+
+/* bg end */
+
+/* navbar start */
+
+.deconnexion {
+    color: red;
+}
+
+.deconnexion:hover{
+    color:black;
+    text-decoration: underline mediumspringgreen;
+
+}
+
+.nbDatas {
+    color: green;
+}
+
+.nbDatas:hover{
+    color:darkgreen;
+    text-decoration: underline mediumspringgreen;
+}
+
+.navbar{
+    border-bottom: green 2px solid;
+}
+
+/* navbar end */
+
+/* formulaire start */
+
+.formulaire{
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 3px solid white;
+    border-top-right-radius: 20%;
+    border-bottom-left-radius: 20%;
+    display:inline-block;
+    display: block;
+    width : 300px;
+    text-align: center;
+}
+
+.formulaire input[type=submit]{
+    color:white;
+    background-color:#003104;
+    border: 2px solid white;
+}
+
+.formulaire label{
+    margin-left: 5%;
+    color: white;
+    display: block;
+    background-color: #003104;
+    width : 150px;
+    text-align: center;
+    transform: translateY(10px);
+    border-top: 2px white solid;
+    border-right: 2px white solid;
+    border-left: 2px white solid;
+    border-top-left-radius: 40%;
+}
+
+
+.formulaire input {
+    border: 2px solid #003104;
+    width : 150px;
+    -webkit-box-sizing: border-box; /* Pour les anciennes versions des navigateurs WebKit */
+    -moz-box-sizing: border-box; /* Pour tous les navigateurs Gecko */
+    box-sizing: border-box;
+}
+
+
+
+
+
+/*pres*/
+
+.formulairePres{
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 3px solid white;
+    display:inline-block;
+    width : 95%;
+    text-align: center;
+    border-top-right-radius: 20%;
+    border-bottom-left-radius: 20%;
+}
+
+.formulairePres h1{
+    color: white;
+}
+
+.formulairePres input[type=submit]{
+    color:white;
+    background-color:#003104;
+    border: 2px solid white;
+}
+
+.formulairePres label{
+    margin-left: 1%;
+    color: white;
+    display: inline-block;
+    background-color: #003104;
+    width : 150px;
+    text-align: center;
+    transform: translateY(0px) translateX(5px);
+    border-top: 2px white solid;
+    border-right: 2px white solid;
+    border-left: 2px white solid;
+    border-top-left-radius: 40%;
+}
+
+.formulairePres input {
+    /*z-index: 2;
+    position: relative;*/
+    border: 2px solid #003104;
+    width : 150px;
+    -webkit-box-sizing: border-box; /* Pour les anciennes versions des navigateurs WebKit */
+    -moz-box-sizing: border-box; /* Pour tous les navigateurs Gecko */
+    box-sizing: border-box;
+}
+
+
+/* Beneficiaire */
+.addBen{
+	display: inline-block;
+    margin-left: 8%;
+    margin-top: 5%;
+}
+
+
+/* Affectation */
+.addAff{
+    margin-left: 8%;
+    margin-top: 5%;
+}
+
+.listElem{
+    margin-left: 40%;
+    margin-top: -500px;
+}
+.listElemAffectation{
+    margin-left: 58%;
+    margin-top: 200%;
+}
+
+/* Prestation */
+.addPres{
+    margin-left: 50px;
+    margin-top: 1%;
+}
+
+#delete{
+    background: red;
+    color: white;
+    margin-bottom: 1%;
+    border-top-left-radius: 20%;
+    border-bottom-left-radius: 20%;
+    border-color: white white white white;
+    border-style: solid solid solid solid;
+    border-width: 2px 0px 2px 2px;
+}
+
+#update{
+    background: green;
+    color: white;
+    margin-bottom: 1%;
+    border-top-right-radius: 20%;
+    border-bottom-right-radius: 20%;
+    border-color: white white white white;
+    border-style: solid solid solid solid;
+    border-width: 2px 2px 2px 0px;
+}
+
+
+.formulaire h1{
+    margin-top: 3%;
+    color: white;
+    font-size: x-large;
+}
+
+
+
+.formulaireList{
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 3px solid white;
+    border-top-right-radius: 5%;
+    border-bottom-left-radius: 5%;
+    width : 610px;
+    text-align: center;
+    color: black;
+}
+
+.formulaireList table{
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.formulaireList h1{
+    margin-top: 3%;
+    color: white;
+    font-size: x-large;
+}
+
+
+.formulaireList table tr{
+    border: 1px solid black;
+}
+
+.formulaireList table td{
+    text-align: center;
+    border-left: black solid 1px;
+    border-right: black solid 1px;
+}
+
+.formulaireList table tr:nth-child(odd)  {
+    background-color: rgba(0, 128, 107, 1);
+    cursor: pointer;
+}
+
+.formulaireList table tr:nth-child(even)  {
+    background-color: #ffff;
+    cursor: pointer;
+}
+
+.titleTblEv{
+    background: rgba(0, 175, 43, 1) !important;
+    color: black;
+}
+
+.numerotation{
+    margin-bottom: 2%;
+    background: rgb(0, 0, 0);
+    border-bottom-left-radius: 100%;
+    border-bottom-right-radius: 100%;
+    border-bottom: white 5px solid;
+}
+
+.numerotation a{
+    color: white;
+}
+
+
+
+/*PRESTA*/
+
+    .formulaireListPresta {
+        background-color: rgba(0, 0, 0, 0.4);
+        border: 3px solid white;
+        border-top-right-radius: 5%;
+        border-bottom-left-radius: 5%;
+        width: 100%;
+        text-align: center;
+        color: black;
+    }
+
+    .formulaireListPresta table {
+        table-layout: fixed;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .formulaireListPresta h1 {
+        margin-top: 1%;
+        color: white;
+        font-size: x-large;
+    }
+
+
+    .formulaireListPresta table tr {
+        border: 1px solid black;
+    }
+
+    .formulaireListPresta table td {
+        overflow: auto;
+        text-align: center;
+        border-left: black solid 1px;
+        border-right: black solid 1px;
+    }
+
+    .formulaireListPresta table tr:nth-child(odd) {
+        background-color: rgba(0, 128, 107, 1);
+        cursor: pointer;
+    }
+
+    .formulaireListPresta table tr:nth-child(even) {
+        background-color: #ffff;
+        cursor: pointer;
+    }
+
+    .formulaireListPresta titleTblEv {
+        background: rgba(0, 175, 43, 1) !important;
+        color: black;
+    }
+
+    .formulaireListPresta .numerotation {
+        margin-bottom: 2%;
+        background: rgb(0, 0, 0);
+        border-bottom-left-radius: 100%;
+        border-bottom-right-radius: 100%;
+        border-bottom: white 5px solid;
+    }
+
+    .formulaireListPresta .numerotation a {
+        color: white;
+    }
+
+
+    .listElemPresta {
+        margin-top: 20px;
+    }
+
+
+
+
+
+
+/* formulaire end */
+
+.htbConnected{
+    text-align: center;
+    margin-top: 25%;
+    color: red;
+}
+
+
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: white;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 3px solid black;
+    width: 80%; /* Could be more or less, depending on screen size */
+    border-bottom-left-radius: 20%;
+    border-top-right-radius: 20%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.allUpdate{
+    display:inline-block;
+    display: block;
+    width : 300px;
+    text-align: center;
+    margin-left: 40%;
+}
+
+.allUpdate input[type=submit]{
+    color:white;
+    background-color:#003104;
+    border: 2px solid white;
+}
+
+.allUpdate label{
+    margin-left: 5%;
+    color: white;
+    display: block;
+    background-color: #003104;
+    width : 150px;
+    text-align: center;
+    transform: translateY(10px);
+    border-top: 2px white solid;
+    border-right: 2px white solid;
+    border-left: 2px white solid;
+    border-top-left-radius: 40%;
+}
+
+
+.allUpdate input {
+    border: 2px solid #003104;
+    width : 150px;
+    -webkit-box-sizing: border-box; /* Pour les anciennes versions des navigateurs WebKit */
+    -moz-box-sizing: border-box; /* Pour tous les navigateurs Gecko */
+    box-sizing: border-box;
+}
+
+.searchDiv{
+    margin-bottom: 1%;
+    margin-top: 1%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: block;
+    border-color : white;
+    border-style: solid dashed solid dashed;
+    border-width: 2px 2px 2px 2px;
+    width : 500px;
+    text-align: center;
+    color: black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.searchDiv table{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.searchDiv td{
+    text-align: center;
+    border-left: black solid 1px;
+    border-right: black solid 1px;
+}
+
+.searchDiv tr:nth-child(odd)  {
+    background-color: rgba(0, 128, 107, 1);
+    cursor: pointer;
+}
+
+.searchDiv tr:nth-child(even)  {
+    background-color: #ffff;
+    cursor: pointer;
+}
+
+.searchDiv h1{
+    color : white;
+}
+
+
+
+.searchDivAffectation{
+    margin-bottom: 1%;
+    margin-top: 1%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: block;
+    border-color : white;
+    border-style: solid dashed solid dashed;
+    border-width: 2px 2px 2px 2px;
+    width : 1200px;
+    text-align: center;
+    color: black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.searchDivAffectation table{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.searchDivAffectation td{
+    text-align: center;
+    border-left: black solid 1px;
+    border-right: black solid 1px;
+}
+
+.searchDivAffectation tr:nth-child(odd)  {
+    background-color: rgba(0, 128, 107, 1);
+    cursor: pointer;
+}
+
+.searchDivAffectation tr:nth-child(even)  {
+    background-color: #ffff;
+    cursor: pointer;
+}
+
+.searchDivAffectation h1{
+    color : white;
+}
+
+
+.searchDivPrestation{
+    margin-bottom: 1%;
+    margin-top: 1%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: block;
+    border-color : white;
+    border-style: solid dashed solid dashed;
+    border-width: 2px 2px 2px 2px;
+    width : 100%;
+    text-align: center;
+    color: black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.searchDivPrestation table{
+    width: 100%;
+    table-layout: fixed;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.searchDivPrestation td{
+    text-align: center;
+    overflow: auto;
+    border-left: black solid 1px;
+    border-right: black solid 1px;
+}
+
+.searchDivPrestation tr:nth-child(odd)  {
+    background-color: rgba(0, 128, 107, 1);
+    cursor: pointer;
+}
+
+.searchDivPrestation tr:nth-child(even)  {
+    background-color: #ffff;
+    cursor: pointer;
+}
+
+.searchDivPrestation h1{
+    color : white;
+}
+
+
+
+
+
+
+
+.infobulle:hover::after,
+.infobulle:focus::after {
+    background: rgb(125, 108, 0);
+    border: 1px solid white;
+    content: attr(aria-label);  /* on affiche aria-label */
+    position: absolute;
+    top: -2.4em;
+    left: 50%;
+    transform: translateX(-70%) translateY(-10%); /* on centre horizontalement  */
+    z-index: 2; /* pour s'afficher au dessus des éléments en position relative */
+    /*white-space: nowrap;  /* on interdit le retour à la ligne */
+    display: inline-block;
+    width: 300px;
+}

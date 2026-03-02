@@ -1,0 +1,10 @@
+# Local databases
+*.db
+
+# IDE and temp files
+.idea/
+~WRL*.tmp
+.DS_Store
+Thumbs.db
+FICHE DE TEST.docx
+
