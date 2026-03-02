@@ -70,11 +70,7 @@ jobs:
             --data-urlencode "BEN_RES_DPT=075" \
             --data-urlencode "BEN_SEX_COD=1" \
             --data-urlencode "BEN_DCD_AME=")
-          python3 - <<'PY' "$BEN_JSON"
-import json, sys
-doc = json.loads(sys.argv[1])
-assert all(v is False for v in doc.values()), doc
-PY
+          python3 -c 'import json,sys; d=json.loads(sys.argv[1]); assert all(v is False for v in d.values()), d' "$BEN_JSON"
 
           AFF_JSON=$(curl -fsS -X POST http://localhost:8080/php/ajout/ajouterAffection.php \
             --data-urlencode "BEN_NIR_IDT=$NIR" \
@@ -83,11 +79,7 @@ PY
             --data-urlencode "IMB_ALD_DTF=2099-01-01" \
             --data-urlencode "IMB_ETM_NAT=41" \
             --data-urlencode "MED_MTF_COD=D695")
-          python3 - <<'PY' "$AFF_JSON"
-import json, sys
-doc = json.loads(sys.argv[1])
-assert doc.get("FK") is False and doc.get("DD") is False and doc.get("DF") is False, doc
-PY
+          python3 -c 'import json,sys; d=json.loads(sys.argv[1]); assert d.get("FK") is False and d.get("DD") is False and d.get("DF") is False, d' "$AFF_JSON"
 
           PRE_JSON=$(curl -fsS -X POST http://localhost:8080/php/ajout/ajouterPrestation.php \
             --data-urlencode "BEN_NIR_IDT=$NIR" \
@@ -100,11 +92,7 @@ PY
             --data-urlencode "BEN_CMU_TOP=0" \
             --data-urlencode "PRE_PRE_DTD=2021-03-01" \
             --data-urlencode "PRS_ACT_QTE=1")
-          python3 - <<'PY' "$PRE_JSON"
-import json, sys
-doc = json.loads(sys.argv[1])
-assert all(v is True for v in doc.values()), doc
-PY
+          python3 -c 'import json,sys; d=json.loads(sys.argv[1]); assert all(v is True for v in d.values()), d' "$PRE_JSON"
 
       - name: Stop app
         if: always()
