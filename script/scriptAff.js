@@ -2,6 +2,18 @@ var url_string = window.location.href
 var url = new URL(url_string);
 var c = url.searchParams.get("page");
 
+function parseResponse(response){
+    if (response === null || response === undefined) return {};
+    if (typeof response === "object") return response;
+    if (typeof response === "string"){
+        try {
+            return JSON.parse(response);
+        } catch (e){
+            return {};
+        }
+    }
+    return {};
+}
     $.ajax({
         method:"post",
         url:"../php/select/selectAff.php",
@@ -29,7 +41,7 @@ var c = url.searchParams.get("page");
             data.innerHTML = "MED";
             tr.appendChild(data);
             table.appendChild(tr);
-            let tab = JSON.parse(response);
+            let tab = parseResponse(response);
             for(let i = 0;i<tab.length;i++){
                 let newR = document.createElement("tr");
                 newR.id = i+"BEN";
@@ -46,41 +58,55 @@ var c = url.searchParams.get("page");
     });
 
     /* Lorsqu'on ajoute */
-    $(document).ready(function(){
-        $(document).on('submit','#formAddAffection',function(e){
-            e.preventDefault();
-            $.ajax({
-                method:"POST",
-                url: "../php/ajout/ajouterAffection.php",
-                data:$(this).serialize(),
-                success: function(response){
-                    let pb = JSON.parse(response);
-                    if (pb['FK']){
-                        let elm = document.getElementsByClassName('FK');
-                        for(let i = 0;i<elm.length;i++) elm[i].style.backgroundColor = "red";
-                    }
-                    if(pb['DD']) document.getElementById('DD').style.backgroundColor = "red";
+$(document).ready(function(){
+    $(document).on('submit','#formAddAffection',function(e){
+        e.preventDefault();
 
+        let elm = document.getElementsByClassName('FK');
+        for(let i = 0;i<elm.length;i++) elm[i].style.backgroundColor = "";
+        if(document.getElementById('DD')) document.getElementById('DD').style.backgroundColor = "";
+        if(document.getElementById('DF')) document.getElementById('DF').style.backgroundColor = "";
 
-                    if(pb['DF']) document.getElementById('DF').style.backgroundColor = "red";
+        $.ajax({
+            method:"POST",
+            url: "../php/ajout/ajouterAffection.php",
+            data:$(this).serialize(),
+            dataType:"json",
+            success: function(response){
+                let pb = parseResponse(response);
+                if (Object.keys(pb).length === 0){
+                    alert("Erreur technique: reponse invalide du serveur.");
+                    return;
+                }
 
+                if (pb['FK']){
+                    let elm = document.getElementsByClassName('FK');
+                    for(let i = 0;i<elm.length;i++) elm[i].style.backgroundColor = "red";
+                }
+                if(pb['DD']) document.getElementById('DD').style.backgroundColor = "red";
+                if(pb['DF']) document.getElementById('DF').style.backgroundColor = "red";
+
+                let res = true;
+                for (let e in pb) res = res && !pb[e];
+
+                if(res){
                     let l = document.getElementsByClassName("addBen")[0].getElementsByTagName("input");
                     for(let i = 0;i<l.length - 1;i++){
                         l[i].value = "";
                     }
-
-                    let res = true;
-                    for (let e in pb) res = res && !pb[e];
-                    
-                    if(res) alert("Affectation ajoutée avec succès !");
-
+                    alert("Affectation ajoutee avec succes !");
+                } else {
+                    alert("Ajout refuse: corrige les champs en rouge (FK/date).");
                 }
-            });
+            },
+            error: function(){
+                alert("Erreur reseau/serveur pendant l'ajout de l'affectation.");
+            }
         });
-    })
+    });
+})
 
-
-    /* Tableau initial */
+/* Tableau initial */
     $(document).ready(function(){
         var lignePerPage = 10;
         var valueBen;
@@ -118,7 +144,7 @@ var c = url.searchParams.get("page");
                         var modal = document.getElementById("myModal");
 
                         
-                        //recuperer les valeurs de l'élément que l'on souhaite modifier
+                        //recuperer les valeurs de l'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©lÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©ment que l'on souhaite modifier
                         var affectationID = saveBtn.childNodes[0].firstChild.nodeValue;
                         var affectationALD = saveBtn.childNodes[1].firstChild.nodeValue;
                         var affectationDD = saveBtn.childNodes[2].firstChild.nodeValue;
@@ -164,7 +190,7 @@ var c = url.searchParams.get("page");
                                 success: function(response){
                                     
                                     
-                                    let arr = JSON.parse(response);
+                                    let arr = parseResponse(response);
                                     
                                     for(let i = 0;i<4;i++) saveBtn.childNodes[i+1].firstChild.nodeValue = arr[i];
                                     resetColor();
@@ -245,7 +271,7 @@ var c = url.searchParams.get("page");
                         document.getElementsByClassName("addBen")[0].style.display = "none";
                     }
                     if(document.getElementsByClassName("searchDivAffectation")[0] != null) document.getElementsByClassName("searchDivAffectation")[0].remove();
-                    let tab = JSON.parse(response);
+                    let tab = parseResponse(response);
                     var div = document.createElement("div");
                     var h1 = document.createElement("h1");
                     h1.innerHTML = "Recherche pour " + $("#recherche").val();
@@ -328,7 +354,7 @@ var c = url.searchParams.get("page");
                                     var modal = document.getElementById("myModal");
 
 
-                                    //recuperer les valeurs de l'élément que l'on souhaite modifier
+                                    //recuperer les valeurs de l'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©lÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©ment que l'on souhaite modifier
                                     var affectationID = ligne.childNodes[0].firstChild.nodeValue;
                                     var affectationALD = ligne.childNodes[1].firstChild.nodeValue;
                                     var affectationDD = ligne.childNodes[2].firstChild.nodeValue;
@@ -378,7 +404,7 @@ var c = url.searchParams.get("page");
                                             data:$(this).serialize(),
                                             success: function(response){
                                                 
-                                                let arr = JSON.parse(response);
+                                                let arr = parseResponse(response);
                                                 for(let i = 0;i<5;i++) ligne.childNodes[i+1].firstChild.nodeValue = arr[i];
                                                 resetColorSearch();
                                             }
@@ -442,3 +468,5 @@ var c = url.searchParams.get("page");
             })
         })
     });
+
+

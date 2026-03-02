@@ -2,6 +2,20 @@
 var url_string = window.location.href
 var url = new URL(url_string);
 var c = url.searchParams.get("page");
+
+function parseResponse(response){
+    if (response === null || response === undefined) return {};
+    if (typeof response === "object") return response;
+    if (typeof response === "string"){
+        try {
+            return JSON.parse(response);
+        } catch (e){
+            return {};
+        }
+    }
+    return {};
+}
+
     $.ajax({
         method:"post",
         url:"../php/select/selectBen.php",
@@ -26,7 +40,7 @@ var c = url.searchParams.get("page");
             data.innerHTML = "DATE-DC";
             tr.appendChild(data);
             table.appendChild(tr);
-            let tab = JSON.parse(response);
+            let tab = parseResponse(response);
             for(let i = 0;i<tab.length;i++){
                 let newR = document.createElement("tr");
                 newR.id = i+"BEN";
@@ -43,31 +57,53 @@ var c = url.searchParams.get("page");
     });
 
     /* Quand on ajoute un ben */
-    $(document).ready(function(){
-        $(document).on('submit','#formBen',function(e){
-            e.preventDefault();
-            $.ajax({
-                method:"POST",
-                url: "../php/ajout/ajouterBeneficiaire.php",
-                data:$(this).serialize(),
-                success: function(response){
-                    let tab = JSON.parse(response);
-                    for(let e in tab) tab[e] ? document.getElementById(e).style.backgroundColor = "red" : "";
+$(document).ready(function(){
+    $(document).on('submit','#formBen',function(e){
+        e.preventDefault();
+        const fieldIds = ["BEN","ANN","DPT","SEX","DCD"];
+        fieldIds.forEach(function(id){
+            const el = document.getElementById(id);
+            if (el) el.style.backgroundColor = "";
+        });
+
+        $.ajax({
+            method:"POST",
+            url: "../php/ajout/ajouterBeneficiaire.php",
+            data:$(this).serialize(),
+            dataType:"json",
+            success: function(response){
+                let tab = parseResponse(response);
+                if (Object.keys(tab).length === 0){
+                    alert("Erreur technique: reponse invalide du serveur.");
+                    return;
+                }
+
+                for(let e in tab){
+                    let label = document.getElementById(e);
+                    if (label) label.style.backgroundColor = tab[e] ? "red" : "";
+                }
+
+                let res = true;
+                for(let e in tab) res = res && !tab[e];
+                if(res){
                     let l = document.getElementsByClassName("addBen")[0].getElementsByTagName("input");
                     for(let i = 0;i<l.length - 1;i++){
                         l[i].value = "";
                     }
-                    let res = true
-                    for(let e in tab) res = res && !tab[e];
-                    if(res) alert("Bénéficiaire ajoutée avec succès !");
-
+                    alert("Beneficiaire ajoute avec succes !");
+                } else {
+                    alert("Ajout refuse: corrige les champs en rouge (NIR deja existant possible).");
                 }
-            });
+
+            },
+            error: function(){
+                alert("Erreur reseau/serveur pendant l'ajout du beneficiaire.");
+            }
         });
-    })
+    });
+})
 
-
-    /* Tableau initial */
+/* Tableau initial */
     $(document).ready(function(){
         var lignePerPage = 20;
         var valueBen;
@@ -100,7 +136,7 @@ var c = url.searchParams.get("page");
                         var modal = document.getElementById("myModal");
 
 
-                        //recuperer les valeurs de l'élément que l'on souhaite modifier
+                        //recuperer les valeurs de l'ÃƒÂ©lÃƒÂ©ment que l'on souhaite modifier
                         var beneficiaireID = saveBtn.childNodes[0].firstChild.nodeValue;
                         var beneficiaireNAI = saveBtn.childNodes[1].firstChild.nodeValue;
                         var beneficiaireDEP = saveBtn.childNodes[2].firstChild.nodeValue;
@@ -126,7 +162,7 @@ var c = url.searchParams.get("page");
                                 data:$(this).serialize(),
                                 success: function(response){
                                     
-                                    let arr = JSON.parse(response);
+                                    let arr = parseResponse(response);
                                     for(let i = 0;i<4;i++) saveBtn.childNodes[i+1].firstChild.nodeValue = arr[i];
                                     resetColor();
                                 }
@@ -207,7 +243,7 @@ var c = url.searchParams.get("page");
 
                     if(document.getElementsByClassName("searchDiv")[0] != null) document.getElementsByClassName("searchDiv")[0].remove();
 
-                    let tab = JSON.parse(response);
+                    let tab = parseResponse(response);
                     var div = document.createElement("div");
                     var h1 = document.createElement("h1");
                     h1.innerHTML = "Recherche pour " + $("#recherche").val();
@@ -280,7 +316,7 @@ var c = url.searchParams.get("page");
                                     var modal = document.getElementById("myModal");
 
 
-                                    //recuperer les valeurs de l'élément que l'on souhaite modifier
+                                    //recuperer les valeurs de l'ÃƒÂ©lÃƒÂ©ment que l'on souhaite modifier
                                     var beneficiaireID = ligne.childNodes[0].firstChild.nodeValue;
                                     var beneficiaireNAI = ligne.childNodes[1].firstChild.nodeValue;
                                     var beneficiaireDEP = ligne.childNodes[2].firstChild.nodeValue;
@@ -305,7 +341,7 @@ var c = url.searchParams.get("page");
                                             url:"../php/update/updateBeneficiaire.php",
                                             data:$(this).serialize(),
                                             success: function(response){
-                                                let arr = JSON.parse(response);
+                                                let arr = parseResponse(response);
                                                 for(let i = 0;i<4;i++) ligne.childNodes[i+1].firstChild.nodeValue = arr[i];
                                                 resetColorSearch();
                                             }
@@ -368,3 +404,4 @@ var c = url.searchParams.get("page");
         })
     }
     );
+

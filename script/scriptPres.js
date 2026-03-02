@@ -2,6 +2,20 @@
 var url_string = window.location.href
 var url = new URL(url_string);
 var c = url.searchParams.get("page");
+
+function parseResponse(response){
+    if (response === null || response === undefined) return {};
+    if (typeof response === "object") return response;
+    if (typeof response === "string"){
+        try {
+            return JSON.parse(response);
+        } catch (e){
+            return {};
+        }
+    }
+    return {};
+}
+
     $.ajax({
         method:"post",
         url:"../php/select/selectPres.php",
@@ -44,13 +58,13 @@ var c = url.searchParams.get("page");
             data.innerHTML = "PRS_ACT_QTE";
             tr.appendChild(data);
             table.appendChild(tr);
-            let tab = JSON.parse(response);
+            let tab = parseResponse(response);
             for(let i = 0;i<tab.length;i++){
                 let newR = document.createElement("tr");
                 newR.id = i+"BEN";
                 for(const val in tab[i]){
                     data = document.createElement('td');
-                    if(tab[i][val] == 0) { // au cas où la data = 0 pour éviter bloc vide
+                    if(tab[i][val] == 0) { // au cas oÃƒÂ¹ la data = 0 pour ÃƒÂ©viter bloc vide
                         data.innerHTML = 0;
                         newR.appendChild(data);
                     }
@@ -71,39 +85,48 @@ var c = url.searchParams.get("page");
 $(document).ready(function(){
     $(document).on('submit','#formAddPrestation',function(e){
         e.preventDefault();
+
+        const fieldIds = ["nir","dD","dF","nPS","nPR","dMDD","spe","cmu","dP","qua"];
+        fieldIds.forEach(function(id){
+            const el = document.getElementById(id);
+            if (el) el.style.backgroundColor = "";
+        });
+
         $.ajax({
             method:"POST",
             url: "../php/ajout/ajouterPrestation.php",
             data:$(this).serialize(),
+            dataType:"json",
             success: function(response){
-
-                //var tab = response.split('|');
-                
-                let tab = JSON.parse(response);
-
-                let size = Object.keys(tab).length;
-
-                if(size == 2){
-                    document.getElementById("dD").style.backgroundColor = "red";
-                    document.getElementById("dF").style.backgroundColor = "red";
+                let tab = parseResponse(response);
+                if (Object.keys(tab).length === 0){
+                    alert("Erreur technique: reponse invalide du serveur.");
+                    return;
                 }
-                else{
-                    for(const val in tab){
-                        if(!tab[val]) document.getElementById(val).style.backgroundColor = "red";
-                    }
+
+                for(const val in tab){
+                    const label = document.getElementById(val);
+                    if (label) label.style.backgroundColor = tab[val] ? "" : "red";
                 }
-                let l = document.getElementsByClassName("addPres")[0].getElementsByTagName("input");
-                for(let i = 0;i<l.length - 1;i++){
-                    l[i].value = "";
-                }
+
                 let res = true;
                 for(let v in tab) res = res && tab[v];
-                if(res) alert('Préstation ajoutée avec succès !');
+                if(res){
+                    let l = document.getElementsByClassName("addPres")[0].getElementsByTagName("input");
+                    for(let i = 0;i<l.length - 1;i++){
+                        l[i].value = "";
+                    }
+                    alert('Prestation ajoutee avec succes !');
+                } else {
+                    alert('Ajout refuse: corrige les champs en rouge.');
+                }
+            },
+            error: function(){
+                alert("Erreur reseau/serveur pendant l'ajout de la prestation.");
             }
         });
     });
 })
-
 
 /* Tableau initial */
 $(document).ready(function(){
@@ -139,7 +162,7 @@ $(document).ready(function(){
                     var modal = document.getElementById("myModal");
 
 
-                    //recuperer les valeurs de l'élément que l'on souhaite modifier
+                    //recuperer les valeurs de l'ÃƒÂ©lÃƒÂ©ment que l'on souhaite modifier
                     var prestationCLE = ligne.childNodes[0].firstChild.nodeValue;
                     var prestationBEN = ligne.childNodes[1].firstChild.nodeValue;
                     var prestationEDTD = ligne.childNodes[2].firstChild.nodeValue;
@@ -214,7 +237,7 @@ $(document).ready(function(){
                             data:$(this).serialize(),
                             success: function(response){
                                 
-                                let arr = JSON.parse(response);
+                                let arr = parseResponse(response);
                                 for(let i = 0;i<11;i++) ligne.childNodes[i].firstChild.nodeValue = arr[i]; // OU METTRE 11?
                                 resetColor();
                             }
@@ -295,7 +318,7 @@ $(document).ready(function(){
                     document.getElementsByClassName("addPres")[0].style.display = "none";
                 }
                 if(document.getElementsByClassName("searchDivPrestation")[0] != null) document.getElementsByClassName("searchDivPrestation")[0].remove();
-                let tab = JSON.parse(response);
+                let tab = parseResponse(response);
                 var div = document.createElement("div");
                 var h1 = document.createElement("h1");
                 h1.innerHTML = "Recherche pour " + $("#recherche").val();
@@ -389,7 +412,7 @@ $(document).ready(function(){
                                 var modal = document.getElementById("myModal");
 
 
-                                //recuperer les valeurs de l'élément que l'on souhaite modifier
+                                //recuperer les valeurs de l'ÃƒÂ©lÃƒÂ©ment que l'on souhaite modifier
                                 var prestationCLE = ligne.childNodes[0].firstChild.nodeValue;
                                 var prestationBEN = ligne.childNodes[1].firstChild.nodeValue;
                                 var prestationEDTD = ligne.childNodes[2].firstChild.nodeValue;
@@ -466,7 +489,7 @@ $(document).ready(function(){
                                         data:$(this).serialize(),
                                         success: function(response){
                                             
-                                            let arr = JSON.parse(response);
+                                            let arr = parseResponse(response);
                                             for(let i = 0;i<11;i++) ligne.childNodes[i+1].firstChild.nodeValue = arr[i];
                                             resetColor();
                                         }
@@ -528,3 +551,4 @@ $(document).ready(function(){
         })
     })
 });
+

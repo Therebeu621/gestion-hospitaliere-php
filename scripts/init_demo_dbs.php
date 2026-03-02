@@ -27,6 +27,7 @@ function main(): void
 
     initBaseDb($baseDbPath);
     initUserDb($userDbPath);
+    ensureWritable($bddDir, $baseDbPath, $userDbPath);
 
     echo "Demo databases are ready in: {$bddDir}\n";
 }
@@ -198,6 +199,18 @@ function fail(SQLite3 $db, string $message): void
 {
     fwrite(STDERR, $message . ': ' . $db->lastErrorMsg() . "\n");
     exit(1);
+}
+
+function ensureWritable(string $bddDir, string $baseDbPath, string $userDbPath): void
+{
+    // In Docker, DB files can be created by root. Grant write access to web worker.
+    @chmod($bddDir, 0777);
+    if (is_file($baseDbPath)) {
+        @chmod($baseDbPath, 0666);
+    }
+    if (is_file($userDbPath)) {
+        @chmod($userDbPath, 0666);
+    }
 }
 
 main();
