@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lint-and-smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+
+      - name: PHP lint
+        run: |
+          set -euo pipefail
+          git ls-files '*.php' | while IFS= read -r file; do
+            php -l "$file" > /dev/null
+            echo "OK $file"
+          done
+
+      - name: Detect compose command
+        run: |
+          if docker compose version >/dev/null 2>&1; then
+            echo "COMPOSE=docker compose" >> "$GITHUB_ENV"
+          elif docker-compose --version >/dev/null 2>&1; then
+            echo "COMPOSE=docker-compose" >> "$GITHUB_ENV"
+          else
+            echo "Docker Compose is not available"
+            exit 1
+          fi
+
+      - name: Start app with demo DB
+        run: |
+          set -euo pipefail
+          RESET_DEMO_DB=1 $COMPOSE up -d
+
+      - name: Wait for HTTP
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8080/index.php > /dev/null; then
+              echo "App is up"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "App did not become ready in time"
+          exit 1
+
+      - name: Smoke tests (beneficiaire/affectation/prestation)
+        run: |
+          set -euo pipefail
+
+          # Build a deterministic 17-digit NIR for this run.
+          NIR="1$(date +%s%N | cut -c1-16)"
+          echo "Using NIR=$NIR"
+
+          BEN_JSON=$(curl -fsS -X POST http://localhost:8080/php/ajout/ajouterBeneficiaire.php \
+            --data-urlencode "BEN_NIR_IDT=$NIR" \
+            --data-urlencode "BEN_NAI_ANN=1990" \
+            --data-urlencode "BEN_RES_DPT=075" \
+            --data-urlencode "BEN_SEX_COD=1" \
+            --data-urlencode "BEN_DCD_AME=")
+          python3 - <<'PY' "$BEN_JSON"
+import json, sys
+doc = json.loads(sys.argv[1])
+assert all(v is False for v in doc.values()), doc
+PY
+
+          AFF_JSON=$(curl -fsS -X POST http://localhost:8080/php/ajout/ajouterAffection.php \
+            --data-urlencode "BEN_NIR_IDT=$NIR" \
+            --data-urlencode "IMB_ALD_NUM=19" \
+            --data-urlencode "IMB_ALD_DTD=2020-02-01" \
+            --data-urlencode "IMB_ALD_DTF=2099-01-01" \
+            --data-urlencode "IMB_ETM_NAT=41" \
+            --data-urlencode "MED_MTF_COD=D695")
+          python3 - <<'PY' "$AFF_JSON"
+import json, sys
+doc = json.loads(sys.argv[1])
+assert doc.get("FK") is False and doc.get("DD") is False and doc.get("DF") is False, doc
+PY
+
+          PRE_JSON=$(curl -fsS -X POST http://localhost:8080/php/ajout/ajouterPrestation.php \
+            --data-urlencode "BEN_NIR_IDT=$NIR" \
+            --data-urlencode "EXE_SOI_DTD=2021-03-10" \
+            --data-urlencode "EXE_SOI_DTF=2021-03-12" \
+            --data-urlencode "PFS_PRE_CRY=AAAAAAAAAAAAAAAAAAAAAAAAA" \
+            --data-urlencode "PRS_NAT_REF=1111" \
+            --data-urlencode "FLX_DIS_DTD=2021-04-01" \
+            --data-urlencode "PSE_ACT_SPE=12345678" \
+            --data-urlencode "BEN_CMU_TOP=0" \
+            --data-urlencode "PRE_PRE_DTD=2021-03-01" \
+            --data-urlencode "PRS_ACT_QTE=1")
+          python3 - <<'PY' "$PRE_JSON"
+import json, sys
+doc = json.loads(sys.argv[1])
+assert all(v is True for v in doc.values()), doc
+PY
+
+      - name: Stop app
+        if: always()
+        run: |
+          $COMPOSE down -v

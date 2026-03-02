@@ -1,20 +1,27 @@
-# gestion-hospitaliere-php
+# Gestion Hospitaliere PHP (Vanilla + SQLite)
 
-Application web PHP/SQLite de gestion hospitaliere (beneficiaires, prestations, affectations).
+Application web universitaire de gestion hospitaliere avec authentification et modules CRUD:
+
+- Beneficiaires
+- Affectations (ALD / pathologies)
+- Prestations
+
+Le projet tourne sans framework PHP, avec SQLite en base locale et jQuery pour les appels AJAX.
 
 ## Stack
 
-- PHP (vanilla)
-- SQLite
-- JavaScript (jQuery)
-- Docker / docker-compose (optionnel)
+- PHP 8.x (vanilla)
+- SQLite3
+- JavaScript + jQuery
+- Docker / Docker Compose
+- GitHub Actions (pipeline CI)
 
-## Lancement rapide avec Docker
+## Demarrage Rapide (Docker)
 
-Prerequis:
+Pre-requis:
 
-- Docker
-- docker-compose (v1 ou v2)
+- Docker Desktop ou Docker Engine
+- Docker Compose (`docker compose` ou `docker-compose`)
 
 Depuis la racine du projet:
 
@@ -22,54 +29,119 @@ Depuis la racine du projet:
 docker-compose up -d
 ```
 
-Puis ouvre:
+Puis ouvrir:
 
 - http://localhost:8080
 
-Identifiants de demo:
+Compte de demo:
 
-- login: `admin`
-- mot de passe: `admin123`
+- Login: `admin`
+- Mot de passe: `admin123`
 
-Notes:
+## Base de Donnees
 
-- Au demarrage, `scripts/init_demo_dbs.php` cree automatiquement `bdd/base.db` et `bdd/user.db` si absents.
-- En Docker, `bdd/` est stocke dans un volume Docker (`app_bdd`) pour eviter les conflits avec tes DB locales.
-- Pour forcer une recreation des DB de demo:
+- `tables.sql`: schema de reference
+- `bdd/base.db`: base metier SQLite (non versionnee)
+- `bdd/user.db`: base auth SQLite (non versionnee)
 
-```bash
-RESET_DEMO_DB=1 docker-compose up
-```
+Les fichiers `.db` ne sont pas pushes (taille + donnees locales).  
+La creation de DB de demo est geree automatiquement par:
 
-- Pour repartir de zero (volume supprime):
+- `scripts/init_demo_dbs.php`
+
+## Reinitialiser la DB Demo
+
+Pour repartir d'une base propre:
 
 ```bash
 docker-compose down -v
-docker-compose up -d
+RESET_DEMO_DB=1 docker-compose up -d
 ```
 
-## Lancement local sans Docker
+## Lancement Local Sans Docker
 
-Si PHP est installe:
+Si PHP est installe localement:
 
 ```bash
 php -S 127.0.0.1:8000
 ```
 
-Puis ouvre:
+Puis ouvrir:
 
 - http://127.0.0.1:8000
 
-## Base de donnees
+## Pipeline CI
 
-- `tables.sql` contient un schema de reference.
-- Les fichiers `*.db` sont ignores par Git (taille importante / donnees locales).
-- Le dossier `bdd/` est garde via `.gitkeep`.
+Workflow GitHub Actions: `.github/workflows/ci.yml`
 
-## Arborescence utile
+La CI execute:
 
-- `index.php`: login + navigation principale
-- `pages/`: interfaces
-- `php/`: endpoints CRUD/recherche
+1. Lint PHP (`php -l`) sur tous les fichiers `.php`
+2. Demarrage de l'app via Docker Compose
+3. Smoke tests HTTP des 3 ajouts critiques:
+   - `ajouterBeneficiaire.php`
+   - `ajouterAffection.php`
+   - `ajouterPrestation.php`
+
+Le job echoue si:
+
+- un fichier PHP est invalide
+- l'app ne demarre pas
+- une reponse JSON d'endpoint est invalide ou incoherente
+
+## Donnees de Test (Exemple)
+
+### Beneficiaire
+
+- `BEN_NIR_IDT`: `17777777777777771`
+- `BEN_NAI_ANN`: `1990`
+- `BEN_RES_DPT`: `075`
+- `BEN_SEX_COD`: `1`
+- `BEN_DCD_AME`: vide
+
+### Affectation
+
+- `BEN_NIR_IDT`: `17777777777777771`
+- `IMB_ALD_NUM`: `19`
+- `IMB_ALD_DTD`: `2020-02-01`
+- `IMB_ALD_DTF`: `2099-01-01`
+- `IMB_ETM_NAT`: `41`
+- `MED_MTF_COD`: `D695`
+
+### Prestation
+
+- `BEN_NIR_IDT`: `17777777777777771`
+- `EXE_SOI_DTD`: `2021-03-10`
+- `EXE_SOI_DTF`: `2021-03-12`
+- `PFS_PRE_CRY`: `AAAAAAAAAAAAAAAAAAAAAAAAA`
+- `PRS_NAT_REF`: `1111`
+- `FLX_DIS_DTD`: `2021-04-01`
+- `PSE_ACT_SPE`: `12345678`
+- `BEN_CMU_TOP`: `0`
+- `PRE_PRE_DTD`: `2021-03-01`
+- `PRS_ACT_QTE`: `1`
+
+## Correctifs Importants Deja Appliques
+
+- Correction des warnings `header()` (redirection login/logout)
+- Suppression des problemes BOM/encodage qui cassaient les headers
+- Robustesse des endpoints d'ajout (JSON propre, validation plus claire)
+- Requetes preparees sur les ajouts
+- Gestion plus explicite des erreurs front (plus de "silence" au submit)
+- Normalisation des fins de ligne (`.gitattributes`)
+
+## Arborescence Utile
+
+- `index.php`: login + navigation
+- `pages/`: vues HTML/PHP
+- `php/`: endpoints CRUD/recherche/select/update/delete
 - `script/`: JS front (AJAX)
-- `scripts/init_demo_dbs.php`: init DB demo
+- `styles/`: CSS
+- `scripts/init_demo_dbs.php`: bootstrap DB demo
+
+## Limites Connues
+
+- Projet vanilla (pas de framework, pas de tests unitaires natifs)
+- Certaines regles metier sont simplifiees pour le contexte universitaire
+- Validation front encore basee majoritairement sur highlighting de labels
+
